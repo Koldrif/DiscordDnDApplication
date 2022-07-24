@@ -8,22 +8,24 @@ public class CommandHandler
 {
     private readonly DiscordSocketClient _client;
     private readonly CommandService _commands;
+    private readonly IServiceProvider _service;
     
-    public CommandHandler(DiscordSocketClient client, CommandService commands)
+    public CommandHandler(DiscordSocketClient client, CommandService commands, IServiceProvider service)
     {
         _commands = commands;
         _client = client;
+        _service = service;
     }
 
     public async Task InstallCommandAsync()
     {
+        await _commands.AddModulesAsync(assembly: Assembly.GetEntryAssembly(), services: _service);
         _client.MessageReceived += HandleCommandAsync;
-
-        await _commands.AddModulesAsync(assembly: Assembly.GetEntryAssembly(), services: null);
     }
 
     private async Task HandleCommandAsync(SocketMessage messageParam)
     {
+        Console.WriteLine($"Got text message {messageParam.Content}");
         var message = messageParam as SocketUserMessage;
 
         if (message == null) return;
@@ -39,7 +41,7 @@ public class CommandHandler
         await _commands.ExecuteAsync(
             context: context,
             argPos: argPos,
-            services: null
+            services: _service
         );
     }
 }
