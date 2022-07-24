@@ -9,15 +9,17 @@ public class CommandHandler
     private readonly DiscordSocketClient _client;
     private readonly CommandService _commands;
     private readonly IServiceProvider _service;
+    private char _prefix;
     
     public CommandHandler(DiscordSocketClient client, CommandService commands, IServiceProvider service)
     {
+        _prefix = '!';
         _commands = commands;
         _client = client;
         _service = service;
     }
 
-    public async Task InstallCommandAsync()
+    public async Task InstallCommandsAsync()
     {
         await _commands.AddModulesAsync(assembly: Assembly.GetEntryAssembly(), services: _service);
         _client.MessageReceived += HandleCommandAsync;
@@ -32,7 +34,7 @@ public class CommandHandler
 
         int argPos = 0;
         
-        if(!(message.HasCharPrefix('!', ref argPos) || 
+        if(!(message.HasCharPrefix(_prefix, ref argPos) || 
              message.HasMentionPrefix(_client.CurrentUser, ref argPos) ||
              message.Author.IsBot)) return;
 

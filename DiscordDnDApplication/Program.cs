@@ -36,20 +36,22 @@ public class Program
             .AddSingleton(_command)
             .AddSingleton<InfoModule>()
             .AddSingleton<SampleModule>()
+            .AddSingleton<VoiceModule>()
             .BuildServiceProvider();
 
         _handler = new CommandHandler(_client, _command, _service);
 
-        await _handler.InstallCommandAsync();
+        await _handler.InstallCommandsAsync();
         
         var token = await (new StreamReader("token.private")).ReadToEndAsync();
 
-
+        _client.Ready += CreateSlashCommandAsync;
 
         await _client.LoginAsync(TokenType.Bot, token);
 
         await _client.StartAsync();
-        _client.Ready += CreateSlashCommandAsync;
+        
+
         
 
         await Task.Delay(-1);

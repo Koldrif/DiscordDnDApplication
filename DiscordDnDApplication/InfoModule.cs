@@ -8,10 +8,11 @@ public class InfoModule : ModuleBase<SocketCommandContext>
     //~say hello world -> Hello world
     [Command("say")]
     [Summary("Echoes a message")]
-    public Task SayAsync([Remainder] [Summary("The text to echo")] string echo)
+    public async Task SayAsync([Remainder] [Summary("The text to echo")] string echo)
     {
-        Console.WriteLine("Trying to echo...");
-        return ReplyAsync(echo);
+        // return ReplyAsync(echo);
+        await Context.Channel.SendMessageAsync(echo);
+
     }
 }
 
