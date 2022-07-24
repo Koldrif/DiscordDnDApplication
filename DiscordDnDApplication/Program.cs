@@ -30,7 +30,7 @@ public class Program
 
         _client.MessageReceived += OnMsgRecieved;
         
-        var token = "MTAwMDEzNTU2NjQyNTMyNTcxOA.G_6g9k.S-keFlqK0C5-M0DZNvKGHkjZN6rFExcYNbn4XA";
+        var token = await (new StreamReader("token.private")).ReadToEndAsync();
 
         await _client.LoginAsync(TokenType.Bot, token);
         await _client.StartAsync();
