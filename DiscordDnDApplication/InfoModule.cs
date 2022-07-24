@@ -33,6 +33,6 @@ public class SampleModule : ModuleBase<SocketCommandContext>
     public async Task UserInfoAsync([Summary("The (optional) user to get info from")] SocketUser user = null)
     {
         var userInfo = user ?? Context.Client.CurrentUser;
-        await ReplyAsync($"{userInfo.Username}#{userInfo.Discriminator}");
+        await ReplyAsync($"{userInfo.Username}#{userInfo.Discriminator}\nid: {user.Id}");
     }
 } 
